@@ -84,6 +84,9 @@
 					//if (preg_match('#^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$#',$map->diq_attribute))
 						$where.=' OR COALESCE('.$map->diq_attribute."::varchar,'')::".$map->fhc_datatype.'!=COALESCE('.$map->fhc_attribute.",'')";
 					break;
+				case 'bigi':
+					$where.=' OR COALESCE('.$map->diq_attribute.'::'.$map->fhc_datatype.',0)::'.$map->fhc_datatype.'!=COALESCE('.$map->fhc_attribute.',0)';
+					break;
 				case 'nume':
 				case 'inte':
 				case 'smal':

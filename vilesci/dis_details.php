@@ -68,7 +68,7 @@
 			echo 'Change Status';
 			if(!isset($_REQUEST['newstatus']))
 				die ('newstatus is not set!');
-			$qry='UPDATE sync.'.$diq->diq_tablename." SET status='".$_REQUEST['newstatus']."' WHERE status='".$_REQUEST['status']."' OR status='i';";
+			$qry='UPDATE sync.'.$diq->diq_tablename." SET status='".$_REQUEST['newstatus']."' WHERE status='".$_REQUEST['status']."';";
 			$diq->db_query($qry);
 			echo '<div align="right">Status changed!</div>';
 		}
@@ -92,7 +92,7 @@
 			//$fhc_table=$dim->getFhcTable();
 			$qry='UPDATE sync.'.$diq->diq_tablename." SET status='i' WHERE status ='u' AND id NOT IN (SELECT ext_id FROM ".$dim->getFhcTable()." WHERE ext_id IS NOT NULL);";
 				if ($diq->db_query($qry))
-					echo '<div align="right">Source Datasets deleted!</div>';
+					echo '<div align="right">Status changed from u to i!</div>';
 			
 		}
 	}

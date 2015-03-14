@@ -108,10 +108,10 @@
 	$diq_table='sync.'.$diq->diq_tablename;
 	// Datensaetze zum Status holen
 	$qry="SELECT * FROM $diq_table WHERE status='".$_REQUEST['status']."'";
-	if (!is_null($diq->diq_limit))
+	if (!is_null($diq->diq_limit) && $diq->diq_limit<1000)
 		$qry.=" LIMIT $diq->diq_limit;";
 	else
-		$qry.=";";
+		$qry.=" LIMIT 100;";
 		
 	if(!$dim->loadData($qry))
 		die($qry);

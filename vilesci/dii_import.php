@@ -17,7 +17,10 @@
  *
  * Authors: Christian Paminger 	< christian.paminger@technikum-wien.at >
  */
- ?>
+ 
+ini_set('memory_limit', '1024M');
+ 
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>

@@ -17,7 +17,10 @@
  *
  * Authors: Christian Paminger 	< christian.paminger@technikum-wien.at >
  */
- ?>
+
+ini_set('memory_limit', '1024M');
+ 
+?>
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -90,7 +93,7 @@
 				case 'nume':
 				case 'inte':
 				case 'smal':
-					$where.=' OR CASE WHEN COALESCE('.$map->diq_attribute."::varchar,'')='' THEN NULL ELSE ".$map->diq_attribute.' END::'.$map->fhc_datatype.'!='.$map->fhc_attribute.'';
+					$where.=' OR CASE WHEN COALESCE('.$map->diq_attribute."::varchar,'')='' THEN NULL ELSE ".$map->diq_attribute.' END::'.$map->fhc_datatype.'!=COALESCE('.$map->fhc_attribute.',0)';
 					break;
 				default:
 					$where.=' OR '.$map->diq_attribute.'::'.$map->fhc_datatype.'!='.$map->fhc_attribute.'';

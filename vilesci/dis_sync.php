@@ -153,7 +153,7 @@ ini_set('memory_limit', '1024M');
 	//var_dump($dim->data);
 	// ***************** INSERTS *********************
 	//$qry="SELECT * FROM $diq_table WHERE (status='i' OR status='u') AND id NOT IN (SELECT COALESCE(ext_id,-1) FROM $fhc_table WHERE ext_id IS NOT NULL)";
-	$qry="SELECT * FROM $diq_table LEFT OUTER JOIN $fhc_table ON (ext_id=id) WHERE (status='i' OR status='u') AND ext_id IS NULL";
+	$qry="SELECT $diq_table.* FROM $diq_table LEFT OUTER JOIN $fhc_table ON (ext_id=id) WHERE (status='i' OR status='u') AND ext_id IS NULL";
 	if (!is_null($diq->diq_limit))
 		$qry.=" LIMIT $diq->diq_limit;";
 	else

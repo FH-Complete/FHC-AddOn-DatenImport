@@ -125,6 +125,7 @@ ini_set('memory_limit', '1024M');
 					die ('Cannot connect to MSSQL DB-System! -> '.$diq->db_host.' - '.$diq->db_user.' - '.$diq->db_passwd);
 				if(!mssql_select_db($diq->db_name,$conn))
 					die ('Cannot connect to MSSQL Database: '.$diq->db_name);
+				mssql_query('SET CONCAT_NULL_YIELDS_NULL ON');
 				if(!$result=mssql_query($diq->sql))
 					die ('MSSQL Error'.mssql_get_last_message());
 				//Fieldnames

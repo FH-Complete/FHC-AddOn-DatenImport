@@ -19,6 +19,7 @@
  */
 
 ini_set('memory_limit', '1024M');
+ini_set('max_execution_time','1200');
  
 ?>
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -79,7 +80,7 @@ ini_set('memory_limit', '1024M');
 			switch (substr($map->fhc_datatype,0,4))
 			{
 				case  'date':
-					if (preg_match('#^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$#',$map->diq_attribute))
+					//if (preg_match('#^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$#',$map->diq_attribute))
 						$where.=' OR '.$map->diq_attribute.'::'.$map->fhc_datatype.'!='.$map->fhc_attribute.'';
 					break;
 				case 'time': // timestamp

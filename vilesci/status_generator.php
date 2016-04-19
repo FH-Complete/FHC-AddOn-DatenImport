@@ -18,10 +18,10 @@
  */
 /**
  * Generiert die Studierenden Historie anhand der eingetragenen Noten
- * 
+ *
  * Das Applicant Syncro legt nur Interessent / Bewerber / Abgewiesenen Status an
  * Das Stuierenden Syncro legt nur den 1. Studierendenstatus / Unterbrecher / Absolventen Status an
- * 
+ *
  * Bei den Vorhandenen Stati ist das Ausbildungssemester (mit ausnahme des Absolventen) nicht korrekt
  * Und muss anhand der eingetragenen Noten korrigiert werden
  *
@@ -82,10 +82,10 @@ if($result_student = $db->db_query($qry_student))
 		$notensemester=array();
 
 		$qry_notensemester = "
-			SELECT 
-				distinct tbl_lehrveranstaltung.semester, tbl_zeugnisnote.studiensemester_kurzbz 
-			FROM 
-				lehre.tbl_zeugnisnote 
+			SELECT
+				distinct tbl_lehrveranstaltung.semester, tbl_zeugnisnote.studiensemester_kurzbz
+			FROM
+				lehre.tbl_zeugnisnote
 				JOIN lehre.tbl_lehrveranstaltung USING(lehrveranstaltung_id)
 			WHERE student_uid=".$db->db_add_param($row_student->student_uid).
 			" AND tbl_lehrveranstaltung.semester!=0 ORDER BY tbl_lehrveranstaltung.semester";
@@ -137,10 +137,10 @@ if($result_student = $db->db_query($qry_student))
 					logMessage("Fehler beim Anlegen des Stati:".$prestudent->errormsg);
 				}
 			}
-	
+
 			// Studentlehrverband eintrag anlegen
 			$student = new student();
-			if($student->studentlehrverband_exists($row_student->student_uid, $row_notensemester['studiensemester_kurzbz']))
+			if($student->studentlehrverband_exists($row_student->prestudent_id, $row_notensemester['studiensemester_kurzbz']))
 			{
 				// Eintrag bereits vorhanden
 			}

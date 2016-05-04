@@ -5,12 +5,12 @@ require_once('../../../include/benutzer.class.php');
 require_once('../../../include/functions.inc.php');
 
 $qry = "
-SELECT 
+SELECT
 	vorname, nachname, uid, alias
-FROM 
-	public.tbl_person 
+FROM
+	public.tbl_person
 	JOIN public.tbl_benutzer USING(person_id)
-	JOIN public.tbl_student ON(uid=student_uid)";
+	JOIN public.tbl_prestudent ON(tbl_prestudent.person_id=tbl_benutzer.person_id)";
 
 $db = new basis_db();
 

@@ -10,7 +10,7 @@ SELECT
 FROM
 	public.tbl_person
 	JOIN public.tbl_benutzer USING(person_id)
-	JOIN public.tbl_prestudent ON(tbl_prestudent.person_id=tbl_benutzer.person_id)";
+	JOIN public.tbl_prestudent ON(tbl_prestudent.uid=tbl_benutzer.uid)";
 
 $db = new basis_db();
 

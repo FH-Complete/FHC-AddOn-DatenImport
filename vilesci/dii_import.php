@@ -74,11 +74,11 @@ ini_set('memory_limit', '1024M');
 			GRANT SELECT, UPDATE, INSERT, DELETE ON sync.'.$tablename.' TO vilesci;';
 
 			if(!$db->db_query($qry))
-				echo '<strong>sync.'.$tablename.': '.$db->db_last_error().'</strong><br>';
+				echo '<strong>sync.'.$tablename.': '.$db->db_last_error().'</strong><br />';
 			else 
-				echo ' sync.'.$tablename.': Tabelle '.$tablename.' hinzugefuegt!<br>';
+				echo ' sync.'.$tablename.': Tabelle '.$tablename.' hinzugefuegt!<br />';
 		}
-		echo 'Tabelle '.$tablename.' ist vorhanden! ;-)<br>';
+		echo 'Tabelle '.$tablename.' ist vorhanden! ;-)<br />';
 	}
 	
 	// Attribut pruefen und ggf. anlegen
@@ -90,9 +90,9 @@ ini_set('memory_limit', '1024M');
 			$qry = 'ALTER TABLE sync.'.$tablename.' ADD COLUMN '.$attribute.' '.$datatype.';';
 			//echo $qry;
 			if(!$db->db_query($qry))
-				echo '<strong>sync.'.$tablename.': '.$db->db_last_error().'</strong><br>';
+				echo '<strong>sync.'.$tablename.': '.$db->db_last_error().'</strong><br />';
 			else 
-				echo ' sync.'.$tablename.': Attribut sync.'.$tablename.'.'.$attribute.' hinzugefuegt!<br>';
+				echo ' sync.'.$tablename.': Attribut sync.'.$tablename.'.'.$attribute.' hinzugefuegt!<br />';
 
 		}
 	}
@@ -164,7 +164,7 @@ ini_set('memory_limit', '1024M');
 			else
 				checkattribute($diq->diq_tablename, $w, 'text');
 			$attributes.=$w.',';				
-			//echo $w.'=='.$diq->diq_keyattribute.'<br>';
+			//echo $w.'=='.$diq->diq_keyattribute.'<br />';
 			$i++;
 		}	
 		$attributes=substr($attributes,0,-1);
@@ -191,7 +191,7 @@ ini_set('memory_limit', '1024M');
 					$qry.=');';
 					//echo $qry;
 					if(!@$db->db_query($qry))
-						echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br>'.$qry.'</strong><br>';
+						echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
 					else 
 						echo 'i';
 				}
@@ -208,7 +208,7 @@ ini_set('memory_limit', '1024M');
 						//echo $j;
 						if ((string)$diq->db_escape($words[$j])!=$diq->data[$j+$offset])
 						{
-							//echo '<br>"'.$words[$j].'"!="'.$diq->data[$j+$offset].'"';
+							//echo '<br />"'.$words[$j].'"!="'.$diq->data[$j+$offset].'"';
 							$qry.=', '.$diq->db_field_name(null,$j+$offset)."='".$diq->db_escape($words[$j])."' ";
 							$update=true;
 						}
@@ -216,9 +216,9 @@ ini_set('memory_limit', '1024M');
 					if ($update)
 					{
 						$qry.=' WHERE '.$diq->diq_keyattribute."='".$words[$keyindex]."';";
-						//echo '<br>'.$qry;
+						//echo '<br />'.$qry;
 						if(!@$db->db_query($qry))
-							echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br>'.$qry.'</strong><br>';
+							echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
 						else 
 							echo '<span title="'.htmlentities($qry).'">u</span>';
 					}
@@ -227,16 +227,17 @@ ini_set('memory_limit', '1024M');
 			//var_dump($words[$keyindex]);
 			echo '.';
 			if (++$i%250==0)
-				echo '<BR>'.round(100/$num_rows*$i).'%&nbsp;';
+				echo '<br />'.round(100/$num_rows*$i).'%&nbsp;';
 			ob_flush();
 			flush();
 		}
-		echo '<BR>100%';
+		echo '<br />100%';
 	}
 	
 	// ================== XML-Import ===================================
 	if ($diq->ods_uri!='' && $diq->ods_uri!=null)
 	{
+		die("Not Implemented yet");
 		//echo $diq->ods_uri;
 		$xsltDoc=new SimpleXMLElement($diq->sql);
 		$xmlDoc = new DOMDocument();
@@ -251,7 +252,7 @@ ini_set('memory_limit', '1024M');
 		//Files laden und als csv ausgeben
 		foreach ($files AS $f)
 		{
-			echo '<BR>Transforming'.trim($f);
+			echo '<br />Transforming'.trim($f);
 			$xmlDoc->load(trim($f));
 			$csv_uri=trim($f).'.csv';
 			$fp = fopen($csv_uri, 'w');
@@ -270,20 +271,23 @@ ini_set('memory_limit', '1024M');
 	if ($diq->csv_uri!='' && $diq->csv_uri!=null)
 	{
 		// Files Laden
-		$files=str_getcsv(trim($diq->csv_uri));
+		$files=str_getcsv(trim($diq->csv_uri),$diq->csv_tab);
 		//var_dump($files);
+		$count=0;
+		$inserts=0;
+		$updates=0;
 		foreach ($files AS $f)
 		{
 			$words=array();
 			$attributes='';
 			$keyindex=-1;
 			$i=0;
-			echo '<BR>Importing'.trim($f).' ';
+			echo '<br />Importing'.trim($f).'<br />';
 			$handle = fopen(trim($f), "r"); //dirname(__FILE__).
-			//Kopfzeile lesen und Attribte checken
+			//Kopfzeile lesen und Attribte checken ****************
 			$head=fgets($handle);
-			$words=str_getcsv($head);
-			//var_dump($words);
+			$words=str_getcsv($head,$diq->csv_tab);
+			//var_dump($words);die();
 			foreach ($words AS $w)
 			{
 				$w=strtolower(str_replace('-','',str_replace(' ','',trim($w))));
@@ -291,23 +295,25 @@ ini_set('memory_limit', '1024M');
 				$attributes.=$w.',';
 				if ($w==$diq->diq_keyattribute)
 					$keyindex=$i;
-				//echo $w.'=='.$diq->diq_keyattribute.'<br>';
+				//echo $w.'=='.$diq->diq_keyattribute.'<br />';
 				$i++;
 			}	
 			$attributes=substr($attributes,0,-1);
 			$i=0;
+			// Import *********************************************
 			while(!feof($handle))
 			{
-				$line=fgets($handle);
-				$words=str_getcsv($line);
+				$line=strtr(fgets($handle),"'","`"); // Steuerzeichen!
+				$words=str_getcsv($line,$diq->csv_tab);
 				//echo count($words);
 				if (count($words)<=1)
 					break;
+				$count++;
 				// Datensatz zum vergleich holen
 				$res=$diq->loadData('sync.'.$diq->diq_tablename,$diq->diq_keyattribute,$words[$keyindex]);
 				if ($res==0)
 				{
-					// Neuer Datensatz **********************
+					// Neuer Datensatz ********************
 					$qry='INSERT INTO sync.'.($diq->diq_tablename).' (status,lastupdate,'.$attributes.") VALUES ('i',now(),";
 					foreach ($words AS $w)
 					{
@@ -317,13 +323,14 @@ ini_set('memory_limit', '1024M');
 					$qry.=');';
 					//echo $qry;
 					if(!@$db->db_query($qry))
-						echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br>'.$qry.'</strong><br>';
+						echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
 					else 
 						echo 'i';
+					$inserts++;
 				}
 				elseif ($res==1)
 				{
-					// Datensatz UPDATE ***************
+					// Datensatz UPDATE *******************
 					$update=false;
 					$qry='UPDATE sync.'.($diq->diq_tablename)." SET lastupdate=now(), status='u'";
 					for ($j=0;$j<count($words);$j++)
@@ -340,9 +347,10 @@ ini_set('memory_limit', '1024M');
 						$qry.=' WHERE '.$diq->diq_keyattribute."='".$words[$keyindex]."';";
 						//echo $qry;
 						if(!@$db->db_query($qry))
-							echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br>'.$qry.'</strong><br>';
+							echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
 						else 
 							echo 'u';
+						$updates++;
 					}
 					else
 						echo '.';
@@ -350,21 +358,32 @@ ini_set('memory_limit', '1024M');
 				
 				//var_dump($words[$keyindex]);
 				if (++$i%250==0)
-					echo '<BR>';
+					echo '<br />';
 				ob_flush();
 				flush();
+				if ($count==$diq->diq_limit)
+				{
+					echo '<br />Limit: '.$limit;
+					break;
+				}
 			}
 		}
 	}
-	$notin=substr($notin,0,-1); // letztes Komma loeschen
-	$qry='UPDATE sync.'.($diq->diq_tablename)." SET lastupdate=now(), status='d'";
-	$qry.=' WHERE '.$diq->diq_keyattribute." NOT IN (".$notin.");";
-	//echo $qry;
-	if(!@$db->db_query($qry))
-		echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br>'.$qry.'</strong><br>';
-	else 
-		echo 'Status d updated!';
-
+	echo '<br />'.$count.' checks!';
+	echo '<br />'.$inserts.' inserts!';
+	echo '<br />'.$updates.' updates!';
+	if ($notin=substr($notin,0,-1))  // letztes Komma loeschen
+	{
+		$qry='UPDATE sync.'.($diq->diq_tablename)." SET lastupdate=now(), status='d'";
+		$qry.=' WHERE '.$diq->diq_keyattribute." NOT IN (".$notin.");";
+		//echo $qry;
+		if(!@$db->db_query($qry))
+			echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
+		else 
+			echo '<br />Status d updated!';
+	}
+	else
+		echo '<br />No deletes!';
 	?>
 	</body>
 </html>

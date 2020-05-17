@@ -47,7 +47,7 @@
 	$diq->diq_viewname= 'vw_di_';
 	$diq->diq_view= 'SELECT ';
 	$diq->csv_uri		= '';
-	$diq->csv_tab		= '\t';
+	$diq->csv_tab		= ';';
 	$diq->ods_uri		= '';
 	$diq->db_typ		= '';
 	$diq->db_host		= '';
@@ -124,48 +124,50 @@
         $htmlstr .="<br><div class='kopf'>Neue Quelle</div>\n"; 
 	$htmlstr .= "<form action='diq_details.php' method='POST' name='diqform'>\n";
 	$htmlstr .= "	<table class='detail'>\n";
-	$htmlstr .= "			<tr>\n";
-	$htmlstr .= "				<td>TableName</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='diq_tablename' size='22' maxlength='32' value='".$diq->diq_tablename."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>KeyAttribute</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='diq_keyattribute' size='8' maxlength='512' value='".$diq->diq_keyattribute."' onchange='submitable()'>";
-	$htmlstr .= "					Order<input class='detail' type='text' name='diq_order' size='2' maxlength='2' value='".$diq->diq_order."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>DB Typ</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='db_typ' size='8' maxlength='16' value='".$diq->db_typ."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>DB Host</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='db_host' size='16' maxlength='32' value='".$diq->db_host."' onchange='submitable()'></td>\n";
-	$htmlstr .= "			</tr>\n";
-	$htmlstr .= "			<tr>\n";
-	$htmlstr .= "				<td>CSV URI</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='csv_uri' size='32' maxlength='1024' value='".$diq->csv_uri."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>CSV TAB</td>\n";
-	$htmlstr .= " 				<td><input class='detail' type='text' name='csv_tab' size='8' maxlength='8' value='".$diq->csv_tab."' onchange='submitable()'>";
-	$htmlstr .= "					Limit<input class='detail' type='text' name='diq_limit' size='3' maxlength='5' value='".$diq->diq_limit."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>DB Port</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='db_port' size='8' maxlength='5' value='".$diq->db_port."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>DB Name</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='db_name' size='8' maxlength='32' value='".$diq->db_name."' onchange='submitable()'></td>\n";
-	$htmlstr .= "			</tr>\n";
-	$htmlstr .= "			<tr>\n";
-	$htmlstr .= "				<td valign='top'>ODS/XML URI</td>\n";
-	$htmlstr .= "				<td valign='top'><input class='detail' type='text' name='ods_uri' size='32' maxlength='1024' value='".$diq->ods_uri."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td valign='top'>View Name</td>\n";
-	$htmlstr .= "				<td valign='top'><input class='detail' type='text' name='diq_viewname' size='22' maxlength='64' value='".$diq->diq_viewname."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>DB User</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='db_user' size='8' maxlength='32' value='".$diq->db_user."' onchange='submitable()'></td>\n";
-	$htmlstr .= "				<td>DB Passwd</td>\n";
-	$htmlstr .= "				<td><input class='detail' type='text' name='db_passwd' size='8' maxlength='32' value='".$diq->db_passwd."' onchange='submitable()'></td>\n";
-	$htmlstr .= "			</tr>\n";
-	$htmlstr .= "			<tr>\n";
-	$htmlstr .= "				<td valign='top'>Mapping VIEW
-									<a href='diq_details.php?diq_id=".$diq->diq_id."&action=SaveView' >
-										<img title='CREATE OR REPLACE VIEW ".$diq->diq_viewname."!' src='view-refresh.png' />
-									</a>
-								</td>\n";
-	$htmlstr .= " 				<td colspan='3'><textarea name='diq_view' cols='70' rows='6' onchange='submitable()'>".$diq->diq_view."</textarea></td>\n";
-	$htmlstr .= "				<td valign='top'>SQL / XSLT</td>\n";
-	$htmlstr .= " 				<td colspan='3'><textarea name='sql' cols='70' rows='6' onchange='submitable()'>".$diq->sql."</textarea></td>\n";
-	$htmlstr .= "			</tr>\n";
+	$htmlstr .= "	  <tr>\n";
+	$htmlstr .= "		<td>TableName</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='diq_tablename' size='22' maxlength='32' value='".$diq->diq_tablename."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>KeyAttribute</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='diq_keyattribute' size='8' maxlength='512' value='".$diq->diq_keyattribute."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>Order</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='diq_order' size='2' maxlength='2' value='".$diq->diq_order."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>DB Type</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='db_typ' size='8' maxlength='16' value='".$diq->db_typ."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>DB Host</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='db_host' size='16' maxlength='32' value='".$diq->db_host."' onchange='submitable()'></td>\n";
+	$htmlstr .= "	  </tr>\n";
+	$htmlstr .= "	  <tr>\n";
+	$htmlstr .= "		<td>CSV URI</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='csv_uri' size='32' maxlength='1024' value='".$diq->csv_uri."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>CSV DELIM</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='csv_tab' size='4' maxlength='4' value='".$diq->csv_tab."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>Limit</td>\n";
+	$htmlstr .= " 		<td><input class='detail' type='text' name='diq_limit' size='6' maxlength='6' value='".$diq->diq_limit."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>DB Port</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='db_port' size='8' maxlength='5' value='".$diq->db_port."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>DB Name</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='db_name' size='8' maxlength='32' value='".$diq->db_name."' onchange='submitable()'></td>\n";
+	$htmlstr .= "	  </tr>\n";
+	$htmlstr .= "	  <tr>\n";
+	$htmlstr .= "		<td>ODS/XML URI</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='ods_uri' size='32' maxlength='1024' value='".$diq->ods_uri."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>View Name</td>\n";
+	$htmlstr .= "		<td colspan='2'><input class='detail' type='text' name='diq_viewname' size='22' maxlength='64' value='".$diq->diq_viewname."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td></td><td>DB User</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='db_user' size='8' maxlength='32' value='".$diq->db_user."' onchange='submitable()'></td>\n";
+	$htmlstr .= "		<td>DB Passwd</td>\n";
+	$htmlstr .= "		<td><input class='detail' type='text' name='db_passwd' size='8' maxlength='32' value='".$diq->db_passwd."' onchange='submitable()'></td>\n";
+	$htmlstr .= "	  </tr>\n";
+	$htmlstr .= "	  <tr>\n";
+	$htmlstr .= "		<td valign='top'>Mapping VIEW
+					<a href='diq_details.php?diq_id=".$diq->diq_id."&action=SaveView' >
+						<img title='CREATE OR REPLACE VIEW ".$diq->diq_viewname."!' src='view-refresh.png' />
+					</a>
+				</td>\n";
+	$htmlstr .= " 		<td colspan='4'><textarea name='diq_view' cols='70' rows='6' onchange='submitable()'>".$diq->diq_view."</textarea></td>\n";
+	$htmlstr .= "		<td valign='top'>SQL / XSLT</td>\n";
+	$htmlstr .= " 		<td colspan='4'><textarea name='sql' cols='70' rows='6' onchange='submitable()'>".$diq->sql."</textarea></td>\n";
+	$htmlstr .= "	  </tr>\n";
 	$htmlstr .= "	</table>\n";
 	$htmlstr .= "<br>\n";
 	$htmlstr .= "<div align='right' id='sub'>\n";

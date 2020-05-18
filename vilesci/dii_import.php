@@ -363,7 +363,7 @@ ini_set('memory_limit', '1024M');
 				flush();
 				if ($count==$diq->diq_limit)
 				{
-					echo '<br />Limit: '.$limit;
+					echo '<br />Limit: '.$diq->diq_limit;
 					break;
 				}
 			}

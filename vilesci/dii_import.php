@@ -41,6 +41,9 @@ ini_set('memory_limit', '1024M');
 	if (!$db = new basis_db())
 		die('Es konnte keine Verbindung zum Server aufgebaut werden.');
 	
+	$count=0;
+	$inserts=0;
+	$updates=0;
 	$offset=3;
 	$user = get_uid();
 	$rechte = new benutzerberechtigung();
@@ -221,6 +224,7 @@ ini_set('memory_limit', '1024M');
 							echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
 						else 
 							echo '<span title="'.htmlentities($qry).'">u</span>';
+						$updates++;
 					}
 				}
 			}
@@ -273,9 +277,6 @@ ini_set('memory_limit', '1024M');
 		// Files Laden
 		$files=str_getcsv(trim($diq->csv_uri),$diq->csv_tab);
 		//var_dump($files);
-		$count=0;
-		$inserts=0;
-		$updates=0;
 		foreach ($files AS $f)
 		{
 			$words=array();
@@ -349,7 +350,7 @@ ini_set('memory_limit', '1024M');
 						if(!@$db->db_query($qry))
 							echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
 						else 
-							echo 'u';
+							echo '<span title="'.htmlentities($qry).'">u</span>';
 						$updates++;
 					}
 					else

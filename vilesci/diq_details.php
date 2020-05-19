@@ -123,7 +123,7 @@
 				ob_start();
 				$df = fopen("php://output", 'w');
 				fputcsv($df, $names, $diq->csv_tab);
-				while ($row = $diq->db_fetch_array())
+				while ($row = $diq->db_fetch_row())
 				{
 					//var_dump($row);
 					fputcsv($df, $row, $diq->csv_tab);

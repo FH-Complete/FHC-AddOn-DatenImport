@@ -69,7 +69,7 @@
 		// Wenn id > 0 ist -> Neuer Datensatz; ansonsten load und update
 		if ( ((int)$_REQUEST["diq_id"]) > 0)
 			$diq->load((int)$_REQUEST["diq_id"]);
-		if ($_REQUEST["action"]=='save')
+		if ($_REQUEST["action"]=='Save')
 		{
 			$diq->diq_tablename = $_POST["diq_tablename"];
 			$diq->diq_keyattribute = $_POST["diq_keyattribute"];
@@ -106,6 +106,47 @@
 			}
 			else
 				$htmlstr.='<div align="right">View '.$diq->diq_viewname.' erfolgreich gespeichert!</div>';
+		}
+		if ($_REQUEST["action"]=='ExportView')
+		{
+			$qry='SELECT * FROM sync.'.$diq->diq_viewname.';';
+			if(!$diq->db_query($qry))
+			{
+				$errorstr .= $diq->errormsg;
+			}
+			else
+			{
+				//if (count($diq->data) == 0) return null;
+				$n=$diq->db_num_fields();
+				for ($i=0; $i<$n; $i++)
+					$names[]=$diq->db_field_name(null,$i);
+				ob_start();
+				$df = fopen("php://output", 'w');
+				fputcsv($df, $names, $diq->csv_tab);
+				while ($row = $diq->db_fetch_array())
+				{
+					//var_dump($row);
+					fputcsv($df, $row, $diq->csv_tab);
+				}
+				fclose($df);
+				$out=ob_get_clean();
+				// Download ***************
+				// disable caching
+				$now = gmdate("D, d M Y H:i:s");
+				header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+				header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+				header("Last-Modified: {$now} GMT");
+				// force download  
+				header("Content-Type: application/force-download");
+				header("Content-Type: application/octet-stream");
+				header("Content-Type: application/download");
+
+				// disposition / encoding on response body
+				header('Content-Disposition: attachment;filename='.$diq->diq_viewname.'.csv');
+				header("Content-Transfer-Encoding: binary");
+				echo $out;
+				exit;			
+			}
 		}
 	}
 
@@ -162,7 +203,8 @@
 	$htmlstr .= "		<td valign='top'>Mapping VIEW
 					<a href='diq_details.php?diq_id=".$diq->diq_id."&action=SaveView' >
 						<img title='CREATE OR REPLACE VIEW ".$diq->diq_viewname."!' src='view-refresh.png' />
-					</a>
+					</a><br />
+					<input type='submit' value='ExportView' name='action'>\n
 				</td>\n";
 	$htmlstr .= " 		<td colspan='4'><textarea name='diq_view' cols='70' rows='6' onchange='submitable()'>".$diq->diq_view."</textarea></td>\n";
 	$htmlstr .= "		<td valign='top'>SQL / XSLT</td>\n";
@@ -173,7 +215,7 @@
 	$htmlstr .= "<div align='right' id='sub'>\n";
 	$htmlstr .= "	<span id='submsg' style='color:red; visibility:hidden;'>Datensatz ge&auml;ndert!&nbsp;&nbsp;</span>\n";
 	$htmlstr .= "	<input type='hidden' name='diq_id' value='".$diq->diq_id."'>";
-	$htmlstr .= "	<input type='submit' value='save' name='action'>\n";
+	$htmlstr .= "	<input type='submit' value='Save' name='action'>\n";
 	$htmlstr .= "	<input type='button' value='Reset' onclick='unchanged()'>\n";
 	$htmlstr .= "</div>";
 	$htmlstr .= "</form>";

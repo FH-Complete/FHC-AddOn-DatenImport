@@ -121,23 +121,32 @@ ini_set('memory_limit', '1024M');
 		// Connect to DB-System
 		$num_rows=0;
 		$conn_str='host='.$diq->db_host.' port='.$diq->db_port.' dbname='.$diq->db_name.' user='.$diq->db_user.' password='.$diq->db_passwd;
+        $mssql_info=array('Database'=>$diq->db_name,'Authentication'=>'SqlPassword','PWD'=>$diq->db_passwd,'UID'=>$diq->db_user,'TrustServerCertificate'=>1);
 		switch ($diq->db_typ)
 		{
 			case 'mssql':
-				if(!$conn=mssql_connect($diq->db_host, $diq->db_user, $diq->db_passwd))
-					die ('Cannot connect to MSSQL DB-System! -> '.$diq->db_host.' - '.$diq->db_user.' - '.$diq->db_passwd);
-				if(!mssql_select_db($diq->db_name,$conn))
-					die ('Cannot connect to MSSQL Database: '.$diq->db_name);
-				mssql_query('SET CONCAT_NULL_YIELDS_NULL ON');
-				if(!$result=mssql_query($diq->sql))
-					die ('MSSQL Error'.mssql_get_last_message());
+				if(!$conn=sqlsrv_connect($diq->db_host, $mssql_info))
+                {
+                    echo '<pre>';
+                    print_r(sqlsrv_errors());
+                    echo '</pre>';
+                    die ('Cannot connect to MSSQL DB-System! -> '.$diq->db_name.' - '.$diq->db_host.' - '.$diq->db_user.' - '.$diq->db_passwd);
+                }
+
+                sqlsrv_query($conn, 'SET CONCAT_NULL_YIELDS_NULL ON');
+				if(!$result=sqlsrv_query($conn, $diq->sql))
+					die ('MSSQL Error'.sqlsrv_errors());
 				//Fieldnames
-				for ($i=0;$i<mssql_num_fields($result);$i++)
-					$importdata->attribute[$i]=mssql_field_name($result,$i);
+                $i=0;
+                foreach(sqlsrv_field_metadata($result) as $fieldMetadata)
+                {
+                    $importdata->attribute[$i]=$fieldMetadata['Name'];
+                    $i++;
+                }
 				//Daten
-				while ($importdata->data[]=mssql_fetch_row($result))
+				while ($importdata->data[]=sqlsrv_fetch($result))
 					;
-				$num_rows=mssql_num_rows($result);
+				$num_rows=sqlsrv_num_rows($result);
 				break;
 			case 'pgsql':
 				if(!$conn=pg_connect($conn_str))

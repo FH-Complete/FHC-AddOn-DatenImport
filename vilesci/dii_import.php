@@ -136,6 +136,8 @@ ini_set('memory_limit', '1024M');
                 sqlsrv_query($conn, 'SET CONCAT_NULL_YIELDS_NULL ON');
 				if(!$result=sqlsrv_query($conn, $diq->sql))
 					die ('MSSQL Error'.sqlsrv_errors());
+
+                $num_rows=sqlsrv_num_rows($result);
 				//Fieldnames
                 $i=0;
                 foreach(sqlsrv_field_metadata($result) as $fieldMetadata)
@@ -144,9 +146,8 @@ ini_set('memory_limit', '1024M');
                     $i++;
                 }
 				//Daten
-				while ($importdata->data[]=sqlsrv_fetch($result))
+                while ($importdata->data[]=sqlsrv_fetch_array($result, SQLSRV_FETCH_NUMERIC))
 					;
-				$num_rows=sqlsrv_num_rows($result);
 				break;
 			case 'pgsql':
 				if(!$conn=pg_connect($conn_str))

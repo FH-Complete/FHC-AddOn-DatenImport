@@ -60,7 +60,7 @@ $htmlstr .= "   </tr></thead><tbody>\n";
 $i = 0;
 foreach ($diq->result as $diquelle)
 {
-	if ($diquelle->diq_limit!=0)
+	if ($diquelle->diq_limit!==0)
 	{
 		//$htmlstr .= "   <tr class='liste". ($i%2) ."'>\n";
 		$htmlstr .= "   <tr>\n";

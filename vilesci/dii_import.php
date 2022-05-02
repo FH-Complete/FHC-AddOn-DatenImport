@@ -134,8 +134,14 @@ ini_set('memory_limit', '1024M');
                 }
 
                 sqlsrv_query($conn, 'SET CONCAT_NULL_YIELDS_NULL ON');
-				if(!$result=sqlsrv_query($conn, $diq->sql))
-					die ('MSSQL Error'.sqlsrv_errors());
+                $qry_options=array('Scrollable'=>'static');
+				if(!$result=sqlsrv_query($conn, $diq->sql, [], $qry_options))
+                {
+                    echo '<pre>';
+                    print_r(sqlsrv_errors());
+                    echo '</pre>';
+                    die ('MSSQL Error');
+                }
 
                 $num_rows=sqlsrv_num_rows($result);
 				//Fieldnames

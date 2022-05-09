@@ -185,6 +185,7 @@ ini_set('memory_limit', '1024M');
 			$attributes.=$w.',';				
 			//echo $w.'=='.$diq->diq_keyattribute.'<br />';
 			$i++;
+            $count++;
 		}	
 		$attributes=substr($attributes,0,-1);
 		// Daten importieren
@@ -213,6 +214,7 @@ ini_set('memory_limit', '1024M');
 						echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
 					else 
 						echo 'i';
+                    $inserts++;
 				}
 			}
 			else

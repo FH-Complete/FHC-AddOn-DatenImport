@@ -152,8 +152,18 @@ ini_set('memory_limit', '1024M');
                     $i++;
                 }
 				//Daten
-                for ($z=0;$z<$num_rows;$z++) {
-                    $importdata->data[]=sqlsrv_fetch_array($result, SQLSRV_FETCH_NUMERIC);
+                for ($z=1;$z<=$num_rows;$z++) {
+                    $fetchData=sqlsrv_fetch_array($result, SQLSRV_FETCH_NUMERIC);
+
+                    if (!$fetchData)
+                    {
+                        echo '<b>Fehler bei Datensatz Nr. ' . $z . ':</b>';
+                        echo '<pre>';
+                        print_r(sqlsrv_errors());
+                        echo '</pre>';
+                    }
+                    else
+                        $importdata->data[]=$fetchData;
                 }
 				break;
 			case 'pgsql':

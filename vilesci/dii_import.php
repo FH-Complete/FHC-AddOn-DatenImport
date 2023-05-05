@@ -180,6 +180,20 @@ ini_set('memory_limit', '1024M');
 				$num_rows=pg_num_rows($result);
 				//var_dump($importdata);
 				break;
+
+			case 'mariadb':
+				if(!$conn=mysqli_connect($diq->db_host,$diq->db_user,$diq->db_passwd,$diq->db_name))
+					die ('Cannot connect to MariaDB System: '.mysqli_connect_error());
+				if(!$result=mysqli_query($conn,$diq->sql))
+					die('MariaDB Error: '.mysqli_error($conn));
+				$num_rows=mysqli_num_rows($result);
+				//Fieldnames
+				foreach(mysqli_fetch_fields($result) as $fieldinfo)
+					$importdata->attribute[]=$fieldinfo->name;
+				//Data
+				while ($importdata->data[]=mysqli_fetch_row($result))
+					;
+				break;
 		}
 		// Attribute pruefen
 		$i=0;

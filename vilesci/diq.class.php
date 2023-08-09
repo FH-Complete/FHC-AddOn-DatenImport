@@ -225,7 +225,7 @@ class diq extends basis_db
 		// Neues DB-Objekt
 		$dbo=new basis_db();
 		//Lesen der Daten aus der Datenbank
-		$qry = "SELECT count(*) AS num_rows FROM $table;";
+		$qry = "SELECT COUNT(*) AS num_rows FROM $table;";
 
 		if(!@$dbo->db_query($qry))
 		{
@@ -248,7 +248,7 @@ class diq extends basis_db
 		// Neues DB-Objekt
 		$dbo=new basis_db();
 		//Lesen der Daten aus der Datenbank
-		$qry = 'SELECT count(*) AS num_rows FROM sync.'.$this->diq_tablename." WHERE status='$status';";
+		$qry = 'SELECT COUNT(*) AS num_rows FROM sync.'.$this->diq_tablename." WHERE status='$status';";
 
 		if(!@$dbo->db_query($qry))
 		{

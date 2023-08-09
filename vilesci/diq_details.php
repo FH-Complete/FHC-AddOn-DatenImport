@@ -116,7 +116,7 @@
 			}
 			else
 			{
-				//if (count($diq->data) == 0) return null;
+				//if (numberOfElements($diq->data) == 0) return null;
 				$n=$diq->db_num_fields();
 				for ($i=0; $i<$n; $i++)
 					$names[]=$diq->db_field_name(null,$i);

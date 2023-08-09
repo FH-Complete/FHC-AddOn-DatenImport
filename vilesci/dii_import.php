@@ -237,7 +237,7 @@ ini_set('memory_limit', '1024M');
                         // Datensatz UPDATE ***************
                         $update=false;
                         $qry='UPDATE sync.'.($diq->diq_tablename)." SET lastupdate=now(), status='u'";
-                        for ($j=0;$j<count($words);$j++)
+                        for ($j=0;$j<numberOfElements($words);$j++)
                         {
                             //echo $j;
                             if ((string)$diq->db_escape($words[$j])!=$diq->data[$j+$offset])
@@ -339,8 +339,8 @@ ini_set('memory_limit', '1024M');
 			{
 				$line=strtr(fgets($handle),"'","`"); // Steuerzeichen!
 				$words=str_getcsv($line,$diq->csv_tab);
-				//echo count($words);
-				if (count($words)<=1)
+				//echo numberOfElements($words);
+				if (numberOfElements($words)<=1)
 					break;
 				$count++;
 				// Datensatz zum vergleich holen
@@ -367,7 +367,7 @@ ini_set('memory_limit', '1024M');
 					// Datensatz UPDATE *******************
 					$update=false;
 					$qry='UPDATE sync.'.($diq->diq_tablename)." SET lastupdate=now(), status='u'";
-					for ($j=0;$j<count($words);$j++)
+					for ($j=0;$j<numberOfElements($words);$j++)
 					{
 						//echo $j;
 						if ($words[$j]!=$diq->data[$j+$offset])

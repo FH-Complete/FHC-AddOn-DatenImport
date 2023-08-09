@@ -322,7 +322,7 @@ if($result_noten = $db->db_query($qry_noten))
 
 				$pruefung = new pruefung();
 				$pruefung->getPruefungen($uid, 'Termin2',$lehrveranstaltung_id);
-				if(count($pruefung->result)==0)
+				if(numberOfElements($pruefung->result)==0)
 				{
 					// Pruefung neu Anlegen
 					$pruefung->student_uid = $uid;
@@ -346,7 +346,7 @@ if($result_noten = $db->db_query($qry_noten))
 				else
 				{
 					//Wenn nur eine Pruefung gefunden wurde
-					if(count($pruefung->result)==1)
+					if(numberOfElements($pruefung->result)==1)
 					{
 						//Pruefen ob die Note gleich ist
 						if($pruefung->result[0]->note != $grade_array[$row_noten->retakegrade])
@@ -376,7 +376,7 @@ if($result_noten = $db->db_query($qry_noten))
 
 				$pruefung = new pruefung();
 				$pruefung->getPruefungen($uid, 'kommPruef',$lehrveranstaltung_id);
-				if(count($pruefung->result)==0)
+				if(numberOfElements($pruefung->result)==0)
 				{
 					// Pruefung neu Anlegen
 					$pruefung->student_uid = $uid;
@@ -399,7 +399,7 @@ if($result_noten = $db->db_query($qry_noten))
 				}
 				else
 				{
-					if(count($pruefung->result)==1)
+					if(numberOfElements($pruefung->result)==1)
 					{
 						if($pruefung->result[0]->note!=$grade_array[$row_noten->comissionexamgrade])
 						{

@@ -81,7 +81,7 @@ if ($result = $db->db_query($qry))
 			
 			if($akte->getAkten($row->person_id, 'Lichtbil'))
 			{
-				if(count($akte->result)>0)
+				if(numberOfElements($akte->result)>0)
 				{
 					$akte = $akte->result[0];
 					$akte->new = false;

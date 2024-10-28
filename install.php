@@ -45,7 +45,7 @@ $rechte->getBerechtigungen($uid);
 
 if(!$rechte->isBerechtigt('basis/addon'))
 {
-	exit('Sie haben keine Berechtigung für die Verwaltung von Addons');
+	exit($uid.' Sie haben keine Berechtigung für die Verwaltung von Addons');
 }
 
 if($fhcomplete_version>=$fhcomplete_target_version)

@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2006 Technikum-Wien
+/* Copyright (C) 2006 fhcomplete.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  *
- * Authors: Christian Paminger 	< christian.paminger@technikum-wien.at >
+ * Authors: Christian Paminger 	<christian@paminger.at>
  */
  
 ini_set('memory_limit', '1024M');
@@ -121,9 +121,35 @@ ini_set('memory_limit', '1024M');
 		// Connect to DB-System
 		$num_rows=0;
 		$conn_str='host='.$diq->db_host.' port='.$diq->db_port.' dbname='.$diq->db_name.' user='.$diq->db_user.' password='.$diq->db_passwd;
-        $mssql_info=array('Database'=>$diq->db_name,'Authentication'=>'SqlPassword','PWD'=>$diq->db_passwd,'UID'=>$diq->db_user,'TrustServerCertificate'=>1);
+      $mssql_info=array('Database'=>$diq->db_name,'Authentication'=>'SqlPassword','PWD'=>$diq->db_passwd,'UID'=>$diq->db_user,'TrustServerCertificate'=>1);
 		switch ($diq->db_typ)
 		{
+			case 'mysql':
+				$mysqli = new mysqli($diq->db_host, $diq->db_user, $diq->db_passwd, $diq->db_name, $diq->db_port);
+				if ($mysqli->connect_error)
+            {
+                    echo '<pre>';
+                    print_r($mysqli->connect_error);
+                    echo '</pre>';
+                    die ('Cannot connect to MYSQL DB-System! -> '.$diq->db_name.' - '.$diq->db_host.' - '.$diq->db_user.' - '.$diq->db_passwd);
+            }
+
+            if(!$result = $mysqli->query($diq->sql))
+            {
+					echo '<pre>';
+               print_r($mysqli->connect_error);
+               echo '</pre>';
+               die ('MYSQL Error');
+            }
+
+            $num_rows = $result->num_rows;
+				//Fieldnames
+				$fieldinfo = $result->fetch_fields();
+				foreach ($fieldinfo as $field)
+					$importdata->attribute[] = $field->name;
+				// Daten
+				$importdata->data = $result->fetch_all(MYSQLI_NUM);
+				break;
 			case 'mssql':
 				if(!$conn=sqlsrv_connect($diq->db_host, $mssql_info))
                 {
@@ -196,7 +222,7 @@ ini_set('memory_limit', '1024M');
 			$attributes.=$w.',';				
 			//echo $w.'=='.$diq->diq_keyattribute.'<br />';
 			$i++;
-            $count++;
+         $count++;
 		}	
 		$attributes=substr($attributes,0,-1);
 		// Daten importieren
@@ -206,60 +232,60 @@ ini_set('memory_limit', '1024M');
 		{
 			if (!is_array($words))
 				var_dump($words);
-            else
-            {
-                $notin.="'".$words[$keyindex]."',";
-                // Datensatz zum vergleich holen
-                if(!$res=$diq->loadData('sync.'.$diq->diq_tablename,$diq->diq_keyattribute,$words[$keyindex]))
-                {
-                    if ($res==0)
-                    {
-                        // Neuer Datensatz **********************
-                        $qry='INSERT INTO sync.'.($diq->diq_tablename).' (status,lastupdate,'.$attributes.") VALUES ('i',now(),";
-                        foreach ($words AS $w)
-                        {
-                            $qry.="'".$diq->db_escape($w)."',";
-                        }
-                        $qry=substr($qry,0,-1);
-                        $qry.=');';
-                        //echo $qry;
-                        if(!@$db->db_query($qry))
-                            echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
-                        else
-                            echo 'i';
-                        $inserts++;
-                    }
-                }
-                else
-                {
-                    if ($res==1)
-                    {
-                        // Datensatz UPDATE ***************
-                        $update=false;
-                        $qry='UPDATE sync.'.($diq->diq_tablename)." SET lastupdate=now(), status='u'";
-                        for ($j=0;$j<count($words);$j++)
-                        {
-                            //echo $j;
-                            if ((string)$diq->db_escape($words[$j])!=$diq->data[$j+$offset])
-                            {
-                                //echo '<br />"'.$words[$j].'"!="'.$diq->data[$j+$offset].'"';
-                                $qry.=', '.$diq->db_field_name(null,$j+$offset)."='".$diq->db_escape($words[$j])."' ";
-                                $update=true;
-                            }
-                        }
-                        if ($update)
-                        {
-                            $qry.=' WHERE '.$diq->diq_keyattribute."='".$words[$keyindex]."';";
-                            //echo '<br />'.$qry;
-                            if(!@$db->db_query($qry))
-                                echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
-                            else
-                                echo '<span title="'.htmlentities($qry).'">u</span>';
-                            $updates++;
-                        }
-                    }
-                }
-            }
+			else
+			{
+					$notin.="'".$words[$keyindex]."',";
+					// Datensatz zum vergleich holen
+					if(!$res=$diq->loadData('sync.'.$diq->diq_tablename,$diq->diq_keyattribute,$words[$keyindex]))
+					{
+						if ($res===0)
+						{
+							// Neuer Datensatz **********************
+							$qry='INSERT INTO sync.'.($diq->diq_tablename).' (status,lastupdate,'.$attributes.") VALUES ('i',now(),";
+							foreach ($words AS $w)
+							{
+									$qry.="'".$diq->db_escape($w)."',";
+							}
+							$qry=substr($qry,0,-1);
+							$qry.=');';
+							//echo $qry;
+							if(!@$db->db_query($qry))
+									echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
+							else
+									echo 'i';
+							$inserts++;
+						}
+					}
+					else
+					{
+						if ($res==1)
+						{
+							// Datensatz UPDATE ***************
+							$update=false;
+							$qry='UPDATE sync.'.($diq->diq_tablename)." SET lastupdate=now(), status='u'";
+							for ($j=0;$j<count($words);$j++)
+							{
+									//echo $j;
+									if ((string)$diq->db_escape($words[$j])!=$diq->data[$j+$offset])
+									{
+										//echo '<br />"'.$words[$j].'"!="'.$diq->data[$j+$offset].'"';
+										$qry.=', '.$diq->db_field_name(null,$j+$offset)."='".$diq->db_escape($words[$j])."' ";
+										$update=true;
+									}
+							}
+							if ($update)
+							{
+									$qry.=' WHERE '.$diq->diq_keyattribute."='".$words[$keyindex]."';";
+									//echo '<br />'.$qry;
+									if(!@$db->db_query($qry))
+										echo '<strong>sync.'.$diq->diq_tablename.': '.$db->db_last_error().'<br />'.$qry.'</strong><br />';
+									else
+										echo '<span title="'.htmlentities($qry).'">u</span>';
+									$updates++;
+							}
+						}
+					}
+			}
 
 			//var_dump($words[$keyindex]);
 			echo '.';
